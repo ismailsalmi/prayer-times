@@ -3,15 +3,15 @@ import Layout from "~/components/globals/layout";
 import ShowDate from "~/components/athan/show-date";
 import React, { useState, useEffect } from "react";
 import PrayerTimes from "~/components/athan/prayers-times";
-import type { TType, TPrayeTimes, TCity } from "../../types/prayer-time-types";
+import type { TType, PrayeTimes, City } from "../../types/prayer-time-types";
 import { useLocation } from "~/hooks/use-location";
 import { BackGroundImage } from "react-background-image-component";
 
 export default function Home() {
-  const [prayers, setPyayers] = useState<TPrayeTimes>();
+  const [prayers, setPyayers] = useState<PrayeTimes>();
   const [currentDate, setCurrentDate] = useState<string>();
   const [currentTime, setCurrentTime] = useState<Pick<TType, "currentTime">>();
-  const [cityAddress, setCityAddress] = useState<TCity>();
+  const [cityAddress, setCityAddress] = useState<City>();
   const { coords, errorMessage } = useLocation();
   useEffect(() => {
     const getPrayersTime = async () => {
@@ -19,7 +19,7 @@ export default function Home() {
         const prayersUrl = `https://api.aladhan.com/v1/timings/${currentDate}?latitude=${coords?.latitude}&longitude=${coords?.longitude}&method=2`;
         const res = await fetch(prayersUrl!);
         const data = await res.json();
-        setPyayers(data as TPrayeTimes);
+        setPyayers(data as PrayeTimes);
       } catch (e: unknown) {
         if (process.env.NODE_ENV === "development") {
           const { message } = e as TypeError;
@@ -35,7 +35,7 @@ export default function Home() {
         const citiesUrl = `https://nominatim.openstreetmap.org/reverse?lat=${coords?.latitude}&lon=${coords?.longitude}&format=json`;
         const res = await fetch(citiesUrl!);
         const json = await res.json();
-        setCityAddress(json as TCity);
+        setCityAddress(json as City);
       } catch (e: unknown) {
         if (process.env.NODE_ENV === "development") {
           if (e instanceof TypeError) {

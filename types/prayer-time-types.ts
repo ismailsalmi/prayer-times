@@ -1,4 +1,4 @@
-export interface TPrayeTimes {
+export interface PrayeTimes {
   data: {
     date: {
       gregorian: {
@@ -87,14 +87,14 @@ export type TType = {
   };
 };
 
-export interface TLocation {
+export interface Location {
   coords: {
     latitude: number;
     longitude: number;
   };
 }
 
-export interface TCity {
+export interface City {
   address: {
     city: string;
     country: string;
@@ -107,7 +107,7 @@ export interface TCity {
     state_district: string;
   };
 }
-export interface TCoords {
+export interface Coords {
   latitude: number;
   longitude: number;
 }
