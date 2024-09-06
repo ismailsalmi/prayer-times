@@ -3,32 +3,22 @@ import Layout from "~/components/globals/layout";
 import ShowDate from "~/components/athan/show-date";
 import React, { useState, useEffect } from "react";
 import PrayerTimes from "~/components/athan/prayers-times";
-import type { TType, PrayeTimes, City } from "../../types/prayer-time-types";
+import type { TType, City, Hadiths } from "../../types/prayer-types";
 import { useLocation } from "~/hooks/use-location";
 import { BackGroundImage } from "react-background-image-component";
+import AutoSlidingWords from "~/components/sliding-words";
+import useSWR from "swr";
 
 export default function Home() {
-  const [prayers, setPyayers] = useState<PrayeTimes>();
   const [currentDate, setCurrentDate] = useState<string>();
   const [currentTime, setCurrentTime] = useState<Pick<TType, "currentTime">>();
   const [cityAddress, setCityAddress] = useState<City>();
   const { coords, errorMessage } = useLocation();
-  useEffect(() => {
-    const getPrayersTime = async () => {
-      try {
-        const prayersUrl = `https://api.aladhan.com/v1/timings/${currentDate}?latitude=${coords?.latitude}&longitude=${coords?.longitude}&method=2`;
-        const res = await fetch(prayersUrl!);
-        const data = await res.json();
-        setPyayers(data as PrayeTimes);
-      } catch (e: unknown) {
-        if (process.env.NODE_ENV === "development") {
-          const { message } = e as TypeError;
-          console.error(message);
-        }
-      }
-    };
-    getPrayersTime();
-  }, [cityAddress]);
+  const fetcher = (...args: Parameters<typeof fetch>) =>
+    fetch(...args).then((res) => res.json());
+  const apiUrl = `https://api.aladhan.com/v1/timings/${currentDate}?latitude=${coords?.latitude}&longitude=${coords?.longitude}&method=2`;
+  const { data, error, isLoading } = useSWR(apiUrl, fetcher);
+
   useEffect(() => {
     const getCurrentCity = async () => {
       try {
@@ -80,9 +70,9 @@ export default function Home() {
   const newData = {
     cityName,
     ...currentTime,
-    ...prayers?.data?.timings,
-    ...prayers?.data?.date,
-  } as TType;
+    ...data?.data.timings,
+    ...data?.data?.date,
+  } satisfies TType;
 
   if (errorMessage) {
     return (
@@ -94,29 +84,28 @@ export default function Home() {
     );
   }
 
-  if (!prayers?.data || !cityAddress?.address) {
+  if (isLoading || !cityAddress?.address) {
     return (
       <Layout>
         <div className="text-3xl font-bold">جاري التحميل...</div>
       </Layout>
     );
   }
-  const imgUrl =
-    "https://images.unsplash.com/photo-1581443459255-e895f2a4222f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80";
 
   return (
     <div>
       <BackGroundImage
-        imgUrl={imgUrl}
+        imgUrl="/images/mosque.jpeg"
         repeat="bg-no-repeat"
         size="bg-cover"
         attatchment="bg-fixed"
         position="bg-center"
       >
         <Layout>
-          <div className="w-full md:w-1/2 mx-2 grid grid-cols-1">
+          <div className="w-full  mx-2 grid grid-cols-1">
             <ShowDate {...newData} />
             <PrayerTimes {...newData} />
+            <AutoSlidingWords />
           </div>
         </Layout>
       </BackGroundImage>

@@ -111,3 +111,9 @@ export interface Coords {
   latitude: number;
   longitude: number;
 }
+
+export interface Hadiths {
+  id: string;
+  hadith: string;
+  narrator: string;
+}

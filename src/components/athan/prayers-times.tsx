@@ -1,5 +1,5 @@
 import React from "react";
-import type { TType } from "~/../../types/prayer-time-types";
+import type { TType } from "types/prayer-types";
 import Hour from "./hour";
 import City from "./city";
 import useRemindeTime from "~/hooks/use-reminde-time";

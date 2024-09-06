@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { TCoords, TLocation } from "../../types/prayer-time-types";
+import type { TCoords, TLocation } from "../../types/prayer-types";
 export function useLocation() {
   const [coords, setCoords] = useState<TCoords>();
   const [errorMessage, setErrorMessage] = useState<string>("");

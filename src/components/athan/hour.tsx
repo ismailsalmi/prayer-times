@@ -1,5 +1,5 @@
 import React from "react";
-import type { TType } from "types/prayer-time-types";
+import type { TType } from "types/prayer-types";
 
 type PrayersType = { name: string; time?: string };
 
