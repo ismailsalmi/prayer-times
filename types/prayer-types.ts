@@ -1,4 +1,4 @@
-export interface PrayeTimes {
+export interface PrayerTimes {
   data: {
     date: {
       gregorian: {
@@ -45,71 +45,27 @@ export interface PrayeTimes {
   };
 }
 
+type GregorianAndHijri = PrayerTimes["data"]["date"];
+
 export type TType = {
   currentTime: {
     hour: number;
     minutes: number;
   };
-  cityName: string;
   Fajr: string;
   Sunrise: string;
   Dhuhr: string;
   Asr: string;
   Maghrib: string;
   Isha: string;
-} & {
-  gregorian: {
-    date: string;
-    day: string;
-    weekday: {
-      ar: string;
-      en: string;
-    };
-    month: {
-      en: string;
-      number: number;
-    };
-    year: string;
-  };
-  hijri: {
-    date: string;
-    day: string;
-    weekday: {
-      ar: string;
-      en: string;
-    };
-    month: {
-      en: string;
-      ar: string;
-      number: number;
-    };
-    year: string;
-  };
-};
+} & GregorianAndHijri;
 
-export interface Location {
-  coords: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
-export interface City {
-  address: {
-    city: string;
-    country: string;
-    country_code: string;
-    house_number: string;
-    neighbourhood: string;
-    postcode: string;
-    road: string;
-    state: string;
-    state_district: string;
-  };
-}
 export interface Coords {
   latitude: number;
   longitude: number;
+}
+export interface Location {
+  coords: Coords;
 }
 
 export interface Hadiths {
@@ -117,3 +73,25 @@ export interface Hadiths {
   hadith: string;
   narrator: string;
 }
+
+export interface Fetcher<T = any> {
+  data: T;
+  error: Error;
+  isLoading: boolean;
+}
+
+export type TPrayers = {
+  id: number;
+  name: string;
+  time: string;
+};
+
+export interface PrevPrayer extends Omit<TPrayers, "time"> {
+  minutes: number;
+}
+
+export type TypeToReturn = {
+  afterPrevPrayer: PrevPrayer;
+  remainsTime: Pick<TType["currentTime"], "hour" | "minutes">;
+  currentPrayer: TPrayers;
+};

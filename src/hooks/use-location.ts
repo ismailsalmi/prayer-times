@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import type { TCoords, TLocation } from "../../types/prayer-types";
+import type { Coords, Location } from "../../types/prayer-types";
 export function useLocation() {
-  const [coords, setCoords] = useState<TCoords>();
+  const [coords, setCoords] = useState<Coords>();
   const [errorMessage, setErrorMessage] = useState<string>("");
   useEffect(() => {
     if (typeof window !== "undefined") {
       navigator.geolocation.getCurrentPosition(
-        ({ coords }: TLocation) => {
+        ({ coords }: Location) => {
           setCoords({ latitude: coords.latitude, longitude: coords.longitude });
           setErrorMessage("");
         },

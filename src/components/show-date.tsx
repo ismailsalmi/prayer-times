@@ -1,5 +1,5 @@
 import React from "react";
-import type { TType } from "../../../types/prayer-types";
+import type { TType } from "types/prayer-types";
 
 export default function ShowDate({
   gregorian,
